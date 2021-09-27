@@ -1,8 +1,8 @@
-FormatHelper/raw/master/.clang-format
-CDoubleList/raw/master/cdouble_list.h
-CDoubleList/raw/master/cdouble_list.c
-CSemaphore/raw/master/csemaphore.h
-CSemaphore/raw/master/csemaphore.c
-CBase/raw/master/cbase.h
-CSemaphore/raw/master/need_files.txt
-CDoubleList/raw/master/need_files.txt
+FormatHelper/.clang-format
+DoubleList/cdouble_list.h
+DoubleList/cdouble_list.c
+Semaphore/csemaphore.h
+Semaphore/csemaphore.c
+Base/cbase.h
+Semaphore/need_files.txt
+DoubleList/need_files.txt

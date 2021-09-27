@@ -1,1 +1,1 @@
-FormatHelper/raw/master/.clang-format
+FormatHelper/.clang-format
