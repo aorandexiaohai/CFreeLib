@@ -1,8 +1,5 @@
-FormatHelper/.clang-format
 DoubleList/cdouble_list.h
 DoubleList/cdouble_list.c
 Semaphore/csemaphore.h
 Semaphore/csemaphore.c
 Base/cbase.h
-Semaphore/need_files.txt
-DoubleList/need_files.txt
