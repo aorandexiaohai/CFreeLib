@@ -11,7 +11,7 @@ current_dir = "../"+os.getcwd().split("/")[-1].split("\\")[-1]
 
 def fetch_need_files(file_path):
     global need_files
-    if file_file_pathname in need_files:
+    if file_path in need_files:
         return
     need_files.add(file_path)
 
