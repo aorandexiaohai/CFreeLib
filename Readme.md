@@ -10,7 +10,7 @@
 
     All the components are separate. For example, if you want to use DoubleList,
     run the following: 
-        cd DoubleList && cp ../FormatHelper/build_environment.py . && python3 build_environment.py
+        cd DoubleList && cp build_environment.py . && python3 build_environment.py
     All the *.c. *.h in DoubleList are needed if you want to use the component.
 
     
