@@ -23,7 +23,7 @@ static void shuffle_array(int* arr, int size) {
         arr[back_idx] = tmp;
     }
 }
-#define LENGTH1 100
+#define LENGTH1 1000
 #define TEST_COUNT 100
 int main() {
     for (int i = 0; i < TEST_COUNT; i++) {
