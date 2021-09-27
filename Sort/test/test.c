@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -14,22 +15,29 @@ int com_int(generic_data_t data1_loc, generic_data_t data2_loc) {
     return 1;
 }
 
-int main() {
-    {
-#define LENGTH1 20
-        int arr[LENGTH1] = {};
-        for (int i = 0; i < LENGTH1; i++) {
-            arr[i] = rand() % LENGTH1;
-        }
-        for (int i = 0; i < LENGTH1; i++) {
-            printf("%3d ", arr[i]);
-        }
-        printf("\n");
-        sort_array(arr, sizeof(int), LENGTH1, com_int, Insertion);
-        for (int i = 0; i < LENGTH1; i++) {
-            printf("%3d ", arr[i]);
-        }
-        printf("\n");
+static void shuffle_array(int* arr, int size) {
+    for (int i = size - 1; i >= 1; i--) {
+        int back_idx = rand() % (i + 1);
+        int tmp = arr[i];
+        arr[i] = arr[back_idx];
+        arr[back_idx] = tmp;
     }
+}
+#define LENGTH1 100
+#define TEST_COUNT 100
+int main() {
+    for (int i = 0; i < TEST_COUNT; i++) {
+        int arr[LENGTH1] = {};
+        int len = (rand() % LENGTH1 + 1);
+        for (int i = 0; i < len; i++) {
+            arr[i] = i;
+        }
+        shuffle_array(arr, len);
+        sort_array(arr, sizeof(int), len, com_int, Insertion);
+        for (int i = 0; i < len; i++) {
+            assert(arr[i] == i);
+        }
+    }
+    printf("test success\n");
     return 0;
 }
