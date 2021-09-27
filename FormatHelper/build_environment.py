@@ -1,8 +1,6 @@
 import requests
 import os
 import sys
-base_url = "https://github.com/aorandexiaohai/"
-# base_url = "https://gitee.com/xiatian_wzh/" # gitee is a substitute of github in China
 
 need_files_idx = 0
 cache = set()
