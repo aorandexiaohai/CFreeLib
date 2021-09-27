@@ -8,7 +8,7 @@
         3) Thread pool
         ...
 
-    All the components are both separate. For example, if you want to use DoubleList,
+    All the components are separate. For example, if you want to use DoubleList,
     run the following: 
         cd DoubleList
         cp ../FormatHelper/build_environment.py .
