@@ -5,9 +5,11 @@
 
 #define ARR(idx) (void*)((char*)(arr) + (single_element_size) * (idx))
 
-void sort_array_merge(generic_data_t arr, int single_element_size, int element_count, compare_function_t cf) {}
+void sort_array_merge(generic_data_t arr, int single_element_size, int element_count,
+                      data_location_compare_function_t cf) {}
 
-void sort_array_insertion(generic_data_t arr, int single_element_size, int element_count, compare_function_t cf) {
+void sort_array_insertion(generic_data_t arr, int single_element_size, int element_count,
+                          data_location_compare_function_t cf) {
     void* key = alloca(single_element_size);
     for (int j = 1; j < element_count; j++) {
         memcpy(key, ARR(j), single_element_size);
@@ -20,7 +22,7 @@ void sort_array_insertion(generic_data_t arr, int single_element_size, int eleme
     }
 }
 
-void sort_array(generic_data_t arr, int single_element_size, int element_count, compare_function_t cf,
+void sort_array(generic_data_t arr, int single_element_size, int element_count, data_location_compare_function_t cf,
                 sort_algorithm_t sa) {
     if (sa == Merge) {
         sort_array_merge(arr, single_element_size, element_count, cf);
