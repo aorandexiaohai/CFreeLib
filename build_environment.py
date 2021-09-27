@@ -12,6 +12,7 @@ current_dir = "../"+os.getcwd().split("/")[-1].split("\\")[-1]
 def fetch_need_files(file_path):
     global need_files
     if file_path in need_files:
+        print(file_path +" has already been processed")
         return
     need_files.add(file_path)
 
@@ -35,7 +36,11 @@ def fetch_single_file(single_file_path):
         return
 
     try:
-        file_name = single_file_path.split('/')[-1]
+        splits = single_file_path.split('/')
+        dir_name = splits[0]
+        fetch_need_files("../"+dir_name+"/need_files.txt")
+
+        file_name = splits[-1]
         flag = False
         if file_name == "need_files.txt":
             need_files_idx = need_files_idx + 1
