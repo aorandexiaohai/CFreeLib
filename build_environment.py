@@ -1,11 +1,13 @@
 import requests
 import os
 import sys
+import shutil
 
 need_files_idx = 0
 cache = set()
 garbage = set()
 need_files = set()
+current_dir = "../"+os.getcwd().split("/")[-1].split("\\")[-1]
 
 def fetch_need_files(file_path):
     global need_files
@@ -40,12 +42,12 @@ def fetch_single_file(single_file_path):
             file_name = file_name + str(need_files_idx)
             flag = True
 
-        # with open(file_name, 'w') as out:
-        #     out.write(response.content.decode())
+        dst_path = current_dir + "/"+ file_name
+        shutil.copyfile(single_file_path, dst_path)
         
         if flag:
-            garbage.add(file_name)
-            fetch_need_files(file_name)
+            garbage.add(dst_path)
+            fetch_need_files(dst_path)
         cache.add(single_file_path)
     except Exception as err:
         print(err)
@@ -54,7 +56,7 @@ if __name__ =='__main__':
     if len(sys.argv) >= 2:
         base_url = sys.argv[1]
     try:
-        fetch_need_files("../"os.getcwd().split("/")[-1].split("\\")[-1] + "/need_files.txt")
+        fetch_need_files(current_dir + "/need_files.txt")
         for f in garbage:
             os.remove(f)
     except Exception as err:
