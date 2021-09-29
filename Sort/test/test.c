@@ -26,8 +26,7 @@ static void shuffle_array(int* arr, int size) {
 #define LENGTH1 1000
 #define TEST_COUNT 100
 int main() {
-    for(int alg = 0; alg<SortAlgorithmCount; alg++)
-    {
+    for (int alg = 0; alg < SortAlgorithmCount; alg++) {
         for (int i = 0; i < TEST_COUNT; i++) {
             int arr[LENGTH1] = {};
             int len = (rand() % LENGTH1);
