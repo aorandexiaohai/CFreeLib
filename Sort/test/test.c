@@ -26,18 +26,22 @@ static void shuffle_array(int* arr, int size) {
 #define LENGTH1 1000
 #define TEST_COUNT 100
 int main() {
-    for (int i = 0; i < TEST_COUNT; i++) {
-        int arr[LENGTH1] = {};
-        int len = (rand() % LENGTH1);
-        for (int i = 0; i < len; i++) {
-            arr[i] = i;
-        }
-        shuffle_array(arr, len);
-        sort_array(arr, sizeof(int), len, com_int, Insertion);
-        for (int i = 0; i < len; i++) {
-            assert(arr[i] == i);
+    for(int alg = 0; alg<SortAlgorithmCount; alg++)
+    {
+        for (int i = 0; i < TEST_COUNT; i++) {
+            int arr[LENGTH1] = {};
+            int len = (rand() % LENGTH1);
+            for (int i = 0; i < len; i++) {
+                arr[i] = i;
+            }
+            shuffle_array(arr, len);
+            sort_array(arr, sizeof(int), len, com_int, alg);
+            for (int i = 0; i < len; i++) {
+                assert(arr[i] == i);
+            }
         }
     }
+
     printf("test success\n");
     return 0;
 }

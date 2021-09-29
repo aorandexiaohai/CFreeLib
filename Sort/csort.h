@@ -4,7 +4,7 @@
 /**
  * sort consecutive array by different algorithms.
  */
-enum sort_algorithm_inner { Insertion = 0, Merge };
+enum sort_algorithm_inner { Insertion = 0, Merge, SortAlgorithmCount };
 typedef enum sort_algorithm_inner sort_algorithm_t;
 /**
  * @brief if single_element_size is very large, it may cause the over flow of stack frame. Because when copying
