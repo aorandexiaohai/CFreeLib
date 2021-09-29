@@ -42,15 +42,15 @@ static void sort_array_merge_rec(generic_data_t arr, generic_data_t arr_copy, in
     memcpy(ELEMENT_LOC(arr, begin), ELEMENT_LOC(arr_copy, begin), single_element_size * (end - begin));
 }
 
-void sort_array_merge(generic_data_t arr, int single_element_size, int element_count,
-                      data_location_compare_function_t cf) {
+static void sort_array_merge(generic_data_t arr, int single_element_size, int element_count,
+                             data_location_compare_function_t cf) {
     generic_data_t arr_copy = malloc(single_element_size * element_count);
     sort_array_merge_rec(arr, arr_copy, single_element_size, 0, element_count, cf);
     free(arr_copy);
 }
 
-void sort_array_insertion(generic_data_t arr, int single_element_size, int element_count,
-                          data_location_compare_function_t cf) {
+static void sort_array_insertion(generic_data_t arr, int single_element_size, int element_count,
+                                 data_location_compare_function_t cf) {
     void* key = alloca(single_element_size);
     for (int j = 1; j < element_count; j++) {
         memcpy(key, ELEMENT_LOC(arr, j), single_element_size);
@@ -62,6 +62,21 @@ void sort_array_insertion(generic_data_t arr, int single_element_size, int eleme
         memcpy(ELEMENT_LOC(arr, i + 1), key, single_element_size);
     }
 }
+static void sort_array_bubble(generic_data_t arr, int single_element_size, int element_count,
+                              data_location_compare_function_t cf) {
+    void* tmp = alloca(single_element_size);
+    for (int i = 0; i + 1 < element_count; i++) {
+        for (int j = 0; j + i + 1 < element_count; j++) {
+            generic_data_t aj = ELEMENT_LOC(arr, j);
+            generic_data_t aj1 = ELEMENT_LOC(arr, j + 1);
+            if (cf(aj, aj1) > 0) {
+                memcpy(tmp, aj, single_element_size);
+                memcpy(aj, aj1, single_element_size);
+                memcpy(aj1, tmp, single_element_size);
+            }
+        }
+    }
+}
 
 void sort_array(generic_data_t arr, int single_element_size, int element_count, data_location_compare_function_t cf,
                 sort_algorithm_t sa) {
@@ -70,5 +85,7 @@ void sort_array(generic_data_t arr, int single_element_size, int element_count, 
         sort_array_merge(arr, single_element_size, element_count, cf);
     } else if (sa == Insertion) {
         sort_array_insertion(arr, single_element_size, element_count, cf);
+    } else if (sa == Bubble) {
+        sort_array_bubble(arr, single_element_size, element_count, cf);
     }
 }
