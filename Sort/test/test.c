@@ -22,30 +22,34 @@ int com_int(generic_data_t data1_loc, generic_data_t data2_loc) {
 #define PERFORMACE_TEST_COUNT 10
 int main() {
     srand(0);
-    for (int alg = 0; alg < SortAlgorithmCount; alg++) {
-        for (int i = 0; i < TEST_COUNT; i++) {
+    int alg = 0;
+    int i = 0;
+    int k = 0;
+    int j = 0;
+    for (alg = 0; alg < SortAlgorithmCount; alg++) {
+        for (i = 0; i < TEST_COUNT; i++) {
             int arr[LENGTH1] = {};
             int len = (rand() % LENGTH1);
-            for (int i = 0; i < len; i++) {
-                arr[i] = i;
+            for (k = 0; k < len; k++) {
+                arr[k] = k;
             }
             shuffle_array(arr, sizeof(int), len);
             sort_array(arr, sizeof(int), len, com_int, alg);
-            for (int i = 0; i < len; i++) {
-                assert(arr[i] == i);
+            for (k = 0; k < len; k++) {
+                assert(arr[k] == k);
             }
         }
     }
     printf("unit test success\n\n-------------------------------------------------------------\n");
     int len = 10000;
     int* arr = malloc(len * sizeof(int));
-    for (int i = 0; i < len; i++) {
+    for (i = 0; i < len; i++) {
         arr[i] = i;
     }
-    for (int alg = 0; alg < SortAlgorithmCount; alg++) {
+    for (alg = 0; alg < SortAlgorithmCount; alg++) {
         struct timeval begin;
         gettimeofday(&begin, NULL);
-        for (int j = 0; j < PERFORMACE_TEST_COUNT; j++) {
+        for (j = 0; j < PERFORMACE_TEST_COUNT; j++) {
             shuffle_array(arr, sizeof(int), len);
             sort_array(arr, sizeof(int), len, com_int, alg);
         }

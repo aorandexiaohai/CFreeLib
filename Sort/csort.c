@@ -57,7 +57,8 @@ static void sort_array_merge(generic_data_t arr, int single_element_size, int el
 static void sort_array_insertion_gap(generic_data_t arr, int single_element_size, int element_count,
                                      data_location_compare_function_t cf, int gap) {
     void* key = alloca(single_element_size);
-    for (int j = gap; j < element_count; j++) {
+    int j = 0;
+    for (j = gap; j < element_count; j++) {
         memcpy(key, ELEMENT_LOC(arr, j), single_element_size);
         int i = j - gap;
         while (i >= 0 && cf(ELEMENT_LOC(arr, i), key) > 0) {
@@ -75,8 +76,9 @@ static void sort_array_insertion(generic_data_t arr, int single_element_size, in
 static void sort_array_bubble(generic_data_t arr, int single_element_size, int element_count,
                               data_location_compare_function_t cf) {
     void* tmp = alloca(single_element_size);
-    for (int i = 0; i + 1 < element_count; i++) {
-        for (int j = 0; j + i + 1 < element_count; j++) {
+    int i = 0, j = 0;
+    for (i = 0; i + 1 < element_count; i++) {
+        for (j = 0; j + i + 1 < element_count; j++) {
             generic_data_t aj = ELEMENT_LOC(arr, j);
             generic_data_t aj1 = ELEMENT_LOC(arr, j + 1);
             if (cf(aj, aj1) > 0) {
@@ -88,7 +90,8 @@ static void sort_array_bubble(generic_data_t arr, int single_element_size, int e
 
 static void sort_array_shell(generic_data_t arr, int single_element_size, int element_count,
                              data_location_compare_function_t cf) {
-    for (int gap = element_count / 2; gap > 0; gap /= 2) {
+    int gap = 0;
+    for (gap = element_count / 2; gap > 0; gap /= 2) {
         sort_array_insertion_gap(arr, single_element_size, element_count, cf, gap);
     }
 }
@@ -96,9 +99,10 @@ static void sort_array_shell(generic_data_t arr, int single_element_size, int el
 static void sort_array_selection(generic_data_t arr, int single_element_size, int element_count,
                                  data_location_compare_function_t cf) {
     void* tmp = alloca(single_element_size);
-    for (int i = 0; i + 1 < element_count; i++) {
+    int i = 0, j = 0;
+    for (i = 0; i + 1 < element_count; i++) {
         generic_data_t ai = ELEMENT_LOC(arr, i);
-        for (int j = i + 1; j < element_count; j++) {
+        for (j = i + 1; j < element_count; j++) {
             generic_data_t aj = ELEMENT_LOC(arr, j);
             if (cf(ai, aj) > 0) {
                 swap_content(ai, aj, tmp, single_element_size);
