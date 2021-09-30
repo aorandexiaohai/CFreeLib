@@ -80,9 +80,7 @@ static void sort_array_bubble(generic_data_t arr, int single_element_size, int e
             generic_data_t aj = ELEMENT_LOC(arr, j);
             generic_data_t aj1 = ELEMENT_LOC(arr, j + 1);
             if (cf(aj, aj1) > 0) {
-                memcpy(tmp, aj, single_element_size);
-                memcpy(aj, aj1, single_element_size);
-                memcpy(aj1, tmp, single_element_size);
+                swap_content(aj1, aj, tmp, single_element_size);
             }
         }
     }
@@ -103,12 +101,23 @@ static void sort_array_selection(generic_data_t arr, int single_element_size, in
         for (int j = i + 1; j < element_count; j++) {
             generic_data_t aj = ELEMENT_LOC(arr, j);
             if (cf(ai, aj) > 0) {
-                memcpy(tmp, ai, single_element_size);
-                memcpy(ai, aj, single_element_size);
-                memcpy(aj, tmp, single_element_size);
+                swap_content(ai, aj, tmp, single_element_size);
             }
         }
     }
+}
+
+static void sort_array_quick_rec(generic_data_t arr, int single_element_size, int p, int r,
+                                 data_location_compare_function_t cf) {
+    if (p + 1 >= r) return;
+    int q = partition(arr, p, r, single_element_size, cf);
+    sort_array_quick_rec(arr, single_element_size, p, q, cf);
+    sort_array_quick_rec(arr, single_element_size, q + 1, r, cf);
+}
+
+static void sort_array_quick(generic_data_t arr, int single_element_size, int element_count,
+                             data_location_compare_function_t cf) {
+    sort_array_quick_rec(arr, single_element_size, 0, element_count, cf);
 }
 
 typedef void (*sort_array_inner_t)(generic_data_t arr, int single_element_size, int element_count,
@@ -118,7 +127,7 @@ void sort_array(generic_data_t arr, int single_element_size, int element_count, 
                 sort_algorithm_t sa) {
     if (single_element_size <= 1) return;
     assert(0 <= sa && sa < SortAlgorithmCount);
-    static sort_array_inner_t funcs[] = {sort_array_insertion, sort_array_bubble, sort_array_merge, sort_array_shell,
-                                         sort_array_selection};
+    static sort_array_inner_t funcs[] = {sort_array_insertion, sort_array_bubble,    sort_array_merge,
+                                         sort_array_shell,     sort_array_selection, sort_array_quick};
     return funcs[sa](arr, single_element_size, element_count, cf);
 }
