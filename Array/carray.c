@@ -12,7 +12,8 @@ void swap_content(generic_data_t data_loc1, generic_data_t data_loc2, generic_da
 
 void shuffle_array(generic_data_t arr, int single_element_size, int element_count) {
     void* tmp = alloca(single_element_size);
-    for (int i = element_count - 1; i >= 1; i--) {
+    int i = 0;
+    for (i = element_count - 1; i >= 1; i--) {
         int j = rand() % (i + 1);
         if (i == j) continue;
         swap_content(fetch_element_address(arr, single_element_size, i),
@@ -30,7 +31,8 @@ int partition(generic_data_t arr, int p, int r, int single_element_size, data_lo
     void* tmp = alloca(single_element_size);
 
     int i = p - 1;
-    for (int j = p; j < r; j++) {
+    int j = 0;
+    for (j = p; j < r; j++) {
         void* aj = fetch_element_address(arr, single_element_size, j);
         if (cf(aj, x) <= 0) {
             i++;
