@@ -1,6 +1,7 @@
 #include "csort.h"
 
 #include <alloca.h>
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -49,18 +50,23 @@ static void sort_array_merge(generic_data_t arr, int single_element_size, int el
     free(arr_copy);
 }
 
+static void sort_array_insertion_gap(generic_data_t arr, int single_element_size, int element_count,
+                                     data_location_compare_function_t cf, int gap) {
+    void* key = alloca(single_element_size);
+    for (int j = gap; j < element_count; j++) {
+        memcpy(key, ELEMENT_LOC(arr, j), single_element_size);
+        int i = j - gap;
+        while (i >= 0 && cf(ELEMENT_LOC(arr, i), key) > 0) {
+            memcpy(ELEMENT_LOC(arr, i + gap), ELEMENT_LOC(arr, i), single_element_size);
+            i -= gap;
+        }
+        memcpy(ELEMENT_LOC(arr, i + gap), key, single_element_size);
+    }
+}
+
 static void sort_array_insertion(generic_data_t arr, int single_element_size, int element_count,
                                  data_location_compare_function_t cf) {
-    void* key = alloca(single_element_size);
-    for (int j = 1; j < element_count; j++) {
-        memcpy(key, ELEMENT_LOC(arr, j), single_element_size);
-        int i = j - 1;
-        while (i >= 0 && cf(ELEMENT_LOC(arr, i), key) > 0) {
-            memcpy(ELEMENT_LOC(arr, i + 1), ELEMENT_LOC(arr, i), single_element_size);
-            i--;
-        }
-        memcpy(ELEMENT_LOC(arr, i + 1), key, single_element_size);
-    }
+    sort_array_insertion_gap(arr, single_element_size, element_count, cf, 1);
 }
 static void sort_array_bubble(generic_data_t arr, int single_element_size, int element_count,
                               data_location_compare_function_t cf) {
@@ -78,14 +84,20 @@ static void sort_array_bubble(generic_data_t arr, int single_element_size, int e
     }
 }
 
+static void sort_array_shell(generic_data_t arr, int single_element_size, int element_count,
+                             data_location_compare_function_t cf) {
+    for (int gap = element_count / 2; gap > 0; gap /= 2) {
+        sort_array_insertion_gap(arr, single_element_size, element_count, cf, gap);
+    }
+}
+
+typedef void (*sort_array_inner_t)(generic_data_t arr, int single_element_size, int element_count,
+                                   data_location_compare_function_t cf);
+
 void sort_array(generic_data_t arr, int single_element_size, int element_count, data_location_compare_function_t cf,
                 sort_algorithm_t sa) {
     if (single_element_size <= 1) return;
-    if (sa == Merge) {
-        sort_array_merge(arr, single_element_size, element_count, cf);
-    } else if (sa == Insertion) {
-        sort_array_insertion(arr, single_element_size, element_count, cf);
-    } else if (sa == Bubble) {
-        sort_array_bubble(arr, single_element_size, element_count, cf);
-    }
+    assert(0 <= sa && sa < SortAlgorithmCount);
+    static sort_array_inner_t funcs[] = {sort_array_insertion, sort_array_bubble, sort_array_merge, sort_array_shell};
+    return funcs[sa](arr, single_element_size, element_count, cf);
 }
