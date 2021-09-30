@@ -30,11 +30,6 @@ int main() {
                 arr[i] = i;
             }
             shuffle_array(arr, sizeof(int), len);
-            for(int i=0; i<len; i++)
-            {
-                printf("%d ", arr[i]);
-            }
-            printf("\n");
             sort_array(arr, sizeof(int), len, com_int, alg);
             for (int i = 0; i < len; i++) {
                 assert(arr[i] == i);

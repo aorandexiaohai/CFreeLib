@@ -22,7 +22,7 @@ static void sort_array_merge_rec(generic_data_t arr, generic_data_t arr_copy, in
     while (base1 < mid && base2 < end) {
         void* addr1 = ELEMENT_LOC(arr, base1);
         void* addr2 = ELEMENT_LOC(arr, base2);
-        void* addr = ELEMENT_LOC(arr, base);
+        void* addr = ELEMENT_LOC(arr_copy, base);
         int r = cf(addr1, addr2);
         if (r <= 0) {
             memcpy(addr, addr1, single_element_size);
