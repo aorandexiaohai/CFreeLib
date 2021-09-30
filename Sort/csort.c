@@ -91,6 +91,22 @@ static void sort_array_shell(generic_data_t arr, int single_element_size, int el
     }
 }
 
+static void sort_array_selection(generic_data_t arr, int single_element_size, int element_count,
+                                 data_location_compare_function_t cf) {
+    void* tmp = alloca(single_element_size);
+    for (int i = 0; i + 1 < element_count; i++) {
+        generic_data_t ai = ELEMENT_LOC(arr, i);
+        for (int j = i + 1; j < element_count; j++) {
+            generic_data_t aj = ELEMENT_LOC(arr, j);
+            if (cf(ai, aj) > 0) {
+                memcpy(tmp, ai, single_element_size);
+                memcpy(ai, aj, single_element_size);
+                memcpy(aj, tmp, single_element_size);
+            }
+        }
+    }
+}
+
 typedef void (*sort_array_inner_t)(generic_data_t arr, int single_element_size, int element_count,
                                    data_location_compare_function_t cf);
 
@@ -98,6 +114,7 @@ void sort_array(generic_data_t arr, int single_element_size, int element_count, 
                 sort_algorithm_t sa) {
     if (single_element_size <= 1) return;
     assert(0 <= sa && sa < SortAlgorithmCount);
-    static sort_array_inner_t funcs[] = {sort_array_insertion, sort_array_bubble, sort_array_merge, sort_array_shell};
+    static sort_array_inner_t funcs[] = {sort_array_insertion, sort_array_bubble, sort_array_merge, sort_array_shell,
+                                         sort_array_selection};
     return funcs[sa](arr, single_element_size, element_count, cf);
 }
