@@ -25,7 +25,7 @@ static void shuffle_array(int* arr, int size) {
     }
 }
 #define LENGTH1 100
-#define TEST_COUNT 500
+#define TEST_COUNT 1000
 #define PERFORMACE_TEST_COUNT 10
 int main() {
     srand(0);
@@ -43,7 +43,7 @@ int main() {
             }
         }
     }
-    printf("unit test success\n\n");
+    printf("unit test success\n\n-------------------------------------------------------------\n");
     int len = 10000;
     int* arr = malloc(len * sizeof(int));
     for (int i = 0; i < len; i++) {
