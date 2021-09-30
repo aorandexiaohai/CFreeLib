@@ -5,7 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define ELEMENT_LOC(arr, idx) (void*)((char*)(arr) + (single_element_size) * (idx))
+#include "carray.h"
+#define ELEMENT_LOC(arr, idx) fetch_element_address(arr, single_element_size, idx)
 
 static void sort_array_merge_rec(generic_data_t arr, generic_data_t arr_copy, int single_element_size, int begin,
                                  int end, data_location_compare_function_t cf) {
@@ -19,12 +20,15 @@ static void sort_array_merge_rec(generic_data_t arr, generic_data_t arr_copy, in
     int base = begin;
 
     while (base1 < mid && base2 < end) {
-        int r = cf(ELEMENT_LOC(arr, base1), ELEMENT_LOC(arr, base2));
+        void* addr1 = ELEMENT_LOC(arr, base1);
+        void* addr2 = ELEMENT_LOC(arr, base2);
+        void* addr = ELEMENT_LOC(arr, base);
+        int r = cf(addr1, addr2);
         if (r <= 0) {
-            memcpy(ELEMENT_LOC(arr_copy, base), ELEMENT_LOC(arr, base1), single_element_size);
+            memcpy(addr, addr1, single_element_size);
             base1++;
         } else {
-            memcpy(ELEMENT_LOC(arr_copy, base), ELEMENT_LOC(arr, base2), single_element_size);
+            memcpy(addr, addr2, single_element_size);
             base2++;
         }
         base++;
