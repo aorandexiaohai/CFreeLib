@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 
+#include "carray.h"
 #include "csort.h"
 
 int com_int(generic_data_t data1_loc, generic_data_t data2_loc) {
@@ -16,14 +17,6 @@ int com_int(generic_data_t data1_loc, generic_data_t data2_loc) {
     return 1;
 }
 
-static void shuffle_array(int* arr, int size) {
-    for (int i = size - 1; i >= 1; i--) {
-        int back_idx = rand() % (i + 1);
-        int tmp = arr[i];
-        arr[i] = arr[back_idx];
-        arr[back_idx] = tmp;
-    }
-}
 #define LENGTH1 100
 #define TEST_COUNT 1000
 #define PERFORMACE_TEST_COUNT 10
@@ -36,7 +29,12 @@ int main() {
             for (int i = 0; i < len; i++) {
                 arr[i] = i;
             }
-            shuffle_array(arr, len);
+            shuffle_array(arr, sizeof(int), len);
+            for(int i=0; i<len; i++)
+            {
+                printf("%d ", arr[i]);
+            }
+            printf("\n");
             sort_array(arr, sizeof(int), len, com_int, alg);
             for (int i = 0; i < len; i++) {
                 assert(arr[i] == i);
@@ -53,7 +51,7 @@ int main() {
         struct timeval begin;
         gettimeofday(&begin, NULL);
         for (int j = 0; j < PERFORMACE_TEST_COUNT; j++) {
-            shuffle_array(arr, len);
+            shuffle_array(arr, sizeof(int), len);
             sort_array(arr, sizeof(int), len, com_int, alg);
         }
         struct timeval end;
