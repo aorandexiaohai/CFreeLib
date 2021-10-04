@@ -9,7 +9,7 @@
 #define ELEMENT_LOC(arr, idx) fetch_element_address(arr, single_element_size, idx)
 
 static void sort_array_merge_rec(generic_data_t arr, generic_data_t arr_copy, int single_element_size, int begin,
-                                 int end, data_location_compare_function_t cf) {
+    int end, data_location_compare_function_t cf) {
     if (begin + 1 >= end) return;
     int mid = (begin + end) / 2;
     sort_array_merge_rec(arr, arr_copy, single_element_size, begin, mid, cf);
@@ -27,7 +27,8 @@ static void sort_array_merge_rec(generic_data_t arr, generic_data_t arr_copy, in
         if (r <= 0) {
             memcpy(addr, addr1, single_element_size);
             base1++;
-        } else {
+        }
+        else {
             memcpy(addr, addr2, single_element_size);
             base2++;
         }
@@ -48,14 +49,14 @@ static void sort_array_merge_rec(generic_data_t arr, generic_data_t arr_copy, in
 }
 
 static void sort_array_merge(generic_data_t arr, int single_element_size, int element_count,
-                             data_location_compare_function_t cf) {
+    data_location_compare_function_t cf) {
     generic_data_t arr_copy = malloc(single_element_size * element_count);
     sort_array_merge_rec(arr, arr_copy, single_element_size, 0, element_count, cf);
     free(arr_copy);
 }
 
 static void sort_array_insertion_gap(generic_data_t arr, int single_element_size, int element_count,
-                                     data_location_compare_function_t cf, int gap) {
+    data_location_compare_function_t cf, int gap) {
     void* key = alloca(single_element_size);
     int j = 0;
     for (j = gap; j < element_count; j++) {
@@ -70,11 +71,11 @@ static void sort_array_insertion_gap(generic_data_t arr, int single_element_size
 }
 
 static void sort_array_insertion(generic_data_t arr, int single_element_size, int element_count,
-                                 data_location_compare_function_t cf) {
+    data_location_compare_function_t cf) {
     sort_array_insertion_gap(arr, single_element_size, element_count, cf, 1);
 }
 static void sort_array_bubble(generic_data_t arr, int single_element_size, int element_count,
-                              data_location_compare_function_t cf) {
+    data_location_compare_function_t cf) {
     void* tmp = alloca(single_element_size);
     int i = 0, j = 0;
     for (i = 0; i + 1 < element_count; i++) {
@@ -89,7 +90,7 @@ static void sort_array_bubble(generic_data_t arr, int single_element_size, int e
 }
 
 static void sort_array_shell(generic_data_t arr, int single_element_size, int element_count,
-                             data_location_compare_function_t cf) {
+    data_location_compare_function_t cf) {
     int gap = 0;
     for (gap = element_count / 2; gap > 0; gap /= 2) {
         sort_array_insertion_gap(arr, single_element_size, element_count, cf, gap);
@@ -97,7 +98,7 @@ static void sort_array_shell(generic_data_t arr, int single_element_size, int el
 }
 
 static void sort_array_selection(generic_data_t arr, int single_element_size, int element_count,
-                                 data_location_compare_function_t cf) {
+    data_location_compare_function_t cf) {
     void* tmp = alloca(single_element_size);
     int i = 0, j = 0;
     for (i = 0; i + 1 < element_count; i++) {
@@ -112,7 +113,7 @@ static void sort_array_selection(generic_data_t arr, int single_element_size, in
 }
 
 static void sort_array_quick_rec(generic_data_t arr, int single_element_size, int p, int r,
-                                 data_location_compare_function_t cf) {
+    data_location_compare_function_t cf) {
     if (p + 1 >= r) return;
     int q = partition(arr, p, r, single_element_size, cf);
     sort_array_quick_rec(arr, single_element_size, p, q, cf);
@@ -120,18 +121,33 @@ static void sort_array_quick_rec(generic_data_t arr, int single_element_size, in
 }
 
 static void sort_array_quick(generic_data_t arr, int single_element_size, int element_count,
-                             data_location_compare_function_t cf) {
+    data_location_compare_function_t cf) {
     sort_array_quick_rec(arr, single_element_size, 0, element_count, cf);
 }
 
+static void sort_array_quick3way_rec(generic_data_t arr, int single_element_size, int p, int r,
+    data_location_compare_function_t cf) {
+    if (p + 1 >= r) return;
+    int left = 0;
+    int right = 0;
+    partition1(arr, p, r, single_element_size, cf, &left, &right);
+    sort_array_quick3way_rec(arr, single_element_size, p, left, cf);
+    sort_array_quick3way_rec(arr, single_element_size, right + 1, r, cf);
+}
+
+static void sort_array_quick3way(generic_data_t arr, int single_element_size, int element_count,
+    data_location_compare_function_t cf) {
+    sort_array_quick3way_rec(arr, single_element_size, 0, element_count, cf);
+}
+
 typedef void (*sort_array_inner_t)(generic_data_t arr, int single_element_size, int element_count,
-                                   data_location_compare_function_t cf);
+    data_location_compare_function_t cf);
 
 void sort_array(generic_data_t arr, int single_element_size, int element_count, data_location_compare_function_t cf,
-                sort_algorithm_t sa) {
+    sort_algorithm_t sa) {
     if (single_element_size <= 1) return;
     assert(0 <= sa && sa < SortAlgorithmCount);
-    static sort_array_inner_t funcs[] = {sort_array_insertion, sort_array_bubble,    sort_array_merge,
-                                         sort_array_shell,     sort_array_selection, sort_array_quick};
+    static sort_array_inner_t funcs[] = { sort_array_insertion, sort_array_bubble,    sort_array_merge,
+                                         sort_array_shell,     sort_array_selection, sort_array_quick, sort_array_quick3way };
     return funcs[sa](arr, single_element_size, element_count, cf);
 }

@@ -8,15 +8,21 @@
 void shuffle_array(generic_data_t arr, int single_element_size, int element_count);
 
 static void* fetch_element_address(generic_data_t arr, int single_element_size, int idx) {
-    return (void*)((char*)(arr) + (single_element_size) * (idx));
+    return (void*)((char*)(arr)+(single_element_size) * (idx));
 }
 /**
  * @brief return a index r and arr[start, r) <= arr[r] <= arr[r+1, end)
 */
 int partition(generic_data_t arr, int start, int end, int single_element_size, data_location_compare_function_t cf);
+
+/**
+ * @brief set r,l and arr[start, r) <= arr[r] = arr[r+1] = ... = arr[l-1] = arr[l] <= arr[l+1, end)
+*/
+void partition1(generic_data_t arr, int start, int end, int single_element_size, data_location_compare_function_t cf, int* left, int* right);
+
 /**
  * @brief swap the content in data_loc1 and data_loc2.
- * 
+ *
  * @param data_swap_loc it is a temporary swap memory
 */
 void swap_content(generic_data_t data_loc1, generic_data_t data_loc2, generic_data_t data_swap_loc, int element_size);
