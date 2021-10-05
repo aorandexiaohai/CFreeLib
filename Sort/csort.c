@@ -2,7 +2,6 @@
 
 #include <alloca.h>
 #include <assert.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "carray.h"
@@ -154,6 +153,46 @@ static void sort_array_heap(generic_data_t arr, int single_element_size, int ele
     }
 }
 
+#define EXTEND_FOR_TYPE(type) \
+        type* arr = (type*)old_arr;\
+        int i = 0;\
+        for (i = 0; i < element_count; i++) {\
+            c[arr[i]]++;\
+        }\
+        int base = 0;\
+        int j = 0;\
+        for (i = 0; i <= max_value; i++)\
+        {\
+            for (j = 0; j < c[i]; j++)\
+            {\
+                arr[base++] = (type)i;\
+            }\
+        }
+
+
+void count_sort_array(generic_data_t old_arr, int single_element_size, int element_count, size_t max_value)
+{
+    int* c = (int*)calloc(sizeof(int) * (max_value + 1), 1);
+    if (single_element_size == sizeof(unsigned char)) {
+        EXTEND_FOR_TYPE(unsigned char);
+    }
+    else if (single_element_size == sizeof(unsigned short)) {
+        EXTEND_FOR_TYPE(unsigned short);
+    }
+    else if (single_element_size == sizeof(unsigned int)) {
+        EXTEND_FOR_TYPE(unsigned int);
+    }
+    else if (single_element_size == sizeof(unsigned long)) {
+        EXTEND_FOR_TYPE(unsigned long);
+    }
+    free(c);
+}
+
+static void sort_array_count(generic_data_t arr, int single_element_size, int element_count,
+    data_location_compare_function_t cf) {
+    count_sort_array(arr, single_element_size, element_count, (size_t)((void*)cf));
+}
+
 typedef void (*sort_array_inner_t)(generic_data_t arr, int single_element_size, int element_count,
     data_location_compare_function_t cf);
 
@@ -162,6 +201,6 @@ void sort_array(generic_data_t arr, int single_element_size, int element_count, 
     if (single_element_size <= 1) return;
     assert(0 <= sa && sa < SortAlgorithmCount);
     static sort_array_inner_t funcs[] = { sort_array_insertion, sort_array_bubble,    sort_array_merge,
-                                         sort_array_shell,     sort_array_selection, sort_array_quick, sort_array_quick3way, sort_array_heap };
+                                         sort_array_shell,     sort_array_selection, sort_array_quick, sort_array_quick3way, sort_array_heap, sort_array_count };
     return funcs[sa](arr, single_element_size, element_count, cf);
 }

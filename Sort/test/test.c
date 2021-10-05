@@ -24,6 +24,7 @@ typedef int (*func_t)(const void* data1_loc, const void* data2_loc);
 #define LENGTH1 100
 #define TEST_COUNT 10000
 #define PERFORMACE_TEST_COUNT 10
+#define MAX_VALUE 10000
 int main() {
     srand(0);
     int alg = 0;
@@ -41,7 +42,14 @@ int main() {
                 shuffle_array(arr, sizeof(int), len);
                 int arr_copy[LENGTH1] = {};
                 memcpy(arr_copy, arr, sizeof(int) * len);
-                sort_array(arr, sizeof(int), len, com_int, alg);
+                if (alg == Count)
+                {
+                    sort_array(arr, sizeof(int), len, (data_location_compare_function_t)((void*)((size_t)MAX_VALUE)), alg);
+                }
+                else
+                {
+                    sort_array(arr, sizeof(int), len, com_int, alg);
+                }
                 qsort(arr_copy, len, sizeof(int), (func_t)com_int);
                 for (k = 0; k < len; k++) {
                     assert(arr[k] == arr_copy[k]);
@@ -57,7 +65,7 @@ int main() {
         int base = 0;
         while (left > 0) {
             int duplicates = rand() % 10;
-            int v = rand() % len;
+            int v = rand() % MAX_VALUE;
             if (duplicates > left) {
                 duplicates = left;
             }
@@ -71,7 +79,14 @@ int main() {
             gettimeofday(&begin, NULL);
             for (j = 0; j < PERFORMACE_TEST_COUNT; j++) {
                 shuffle_array(arr, sizeof(int), len);
-                sort_array(arr, sizeof(int), len, com_int, alg);
+                if (alg == Count)
+                {
+                    sort_array(arr, sizeof(int), len, (data_location_compare_function_t)((void*)((size_t)MAX_VALUE)), alg);
+                }
+                else
+                {
+                    sort_array(arr, sizeof(int), len, com_int, alg);
+                }
             }
             struct timeval end;
             gettimeofday(&end, NULL);
@@ -90,7 +105,7 @@ int main() {
         int base = 0;
         while (left > 0) {
             int duplicates = rand() % 10;
-            int v = rand() % len;
+            int v = rand() % MAX_VALUE;
             if (duplicates > left) {
                 duplicates = left;
             }
@@ -105,7 +120,15 @@ int main() {
             gettimeofday(&begin, NULL);
             for (j = 0; j < PERFORMACE_TEST_COUNT; j++) {
                 shuffle_array(arr, sizeof(int), len);
-                sort_array(arr, sizeof(int), len, com_int, alg);
+                if (alg == Count)
+                {
+                    sort_array(arr, sizeof(int), len, (data_location_compare_function_t)((void*)((size_t)MAX_VALUE)), alg);
+                }
+                else
+                {
+                    sort_array(arr, sizeof(int), len, com_int, alg);
+                }
+
             }
             struct timeval end;
             gettimeofday(&end, NULL);
