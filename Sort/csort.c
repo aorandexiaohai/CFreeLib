@@ -212,6 +212,17 @@ static void sort_array_count(generic_data_t arr, int single_element_size, int el
     count_sort_array(arr, single_element_size, element_count, (size_t)((void*)cf));
 }
 
+#define EXTEND_FOR_TYPE1(type)                                                                             \
+    for (i = 0; i < single_element_size; i++) {                                                            \
+        for (j = 0; j < element_count; j++) {                                                              \
+            cmp_arr[j] = ((type*)copy_arr)[j] % (max_value + 1);                                           \
+            ((type*)copy_arr)[j] /= (max_value + 1);                                                       \
+        }                                                                                                  \
+        memset(count_array, 0, sizeof(int) * (max_value + 1));                                             \
+        count_sort_array_satellite(cmp_arr, cmp_arr_out, arr, output_satellite_arr, sizeof(unsigned char), \
+                                   single_element_size, element_count, max_value, count_array);            \
+    }
+
 void radix_sort_array(generic_data_t arr, int single_element_size, int element_count) {
     int total_size = single_element_size * element_count;
     unsigned char* cmp_arr = malloc(sizeof(unsigned char) * element_count);
@@ -223,17 +234,18 @@ void radix_sort_array(generic_data_t arr, int single_element_size, int element_c
     memcpy(copy_arr, arr, total_size);
     int i = 0;
     int j = 0;
-    if (single_element_size == sizeof(unsigned int)) {
-        for (i = 0; i < single_element_size; i++) {
-            for (j = 0; j < element_count; j++) {
-                cmp_arr[j] = ((unsigned int*)copy_arr)[j] % (max_value + 1);
-                ((unsigned int*)copy_arr)[j] /= (max_value + 1);
-            }
-            memset(count_array, 0, sizeof(int) * (max_value + 1));
-            count_sort_array_satellite(cmp_arr, cmp_arr_out, arr, output_satellite_arr, sizeof(unsigned char),
-                                       single_element_size, element_count, max_value, count_array);
-        }
+    if (single_element_size == sizeof(unsigned char)) {
+        EXTEND_FOR_TYPE1(unsigned char);
+    } else if (single_element_size == sizeof(unsigned short)) {
+        EXTEND_FOR_TYPE1(unsigned short);
+    } else if (single_element_size == sizeof(unsigned int)) {
+        EXTEND_FOR_TYPE1(unsigned int);
+    } else if (single_element_size == sizeof(unsigned long)) {
+        EXTEND_FOR_TYPE1(unsigned long);
+    } else if (single_element_size == sizeof(unsigned long long)) {
+        EXTEND_FOR_TYPE1(unsigned long long);
     }
+
     free(count_array);
     free(cmp_arr_out);
     free(cmp_arr);
