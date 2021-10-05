@@ -181,13 +181,8 @@ static void sort_array_heap(generic_data_t arr, int single_element_size, int ele
             } \
         }
 
-static void count_sort_array_satellite(generic_data_t cmp_arr, generic_data_t cmp_arr_out, generic_data_t satellite_arr, int cmp_element_size, int satellite_element_size, int element_count, size_t max_value, int* count_array)
+static void count_sort_array_satellite(generic_data_t cmp_arr, generic_data_t cmp_arr_out, generic_data_t satellite_arr, generic_data_t* output_satellite_arr, int cmp_element_size, int satellite_element_size, int element_count, size_t max_value, int* count_array)
 {
-    generic_data_t* output_satellite_arr = NULL;
-    if (satellite_arr)
-    {
-        output_satellite_arr = malloc(satellite_element_size * element_count);
-    }
 
     if (cmp_element_size == sizeof(unsigned char)) {
         EXTEND_FOR_TYPE(unsigned char);
@@ -209,7 +204,6 @@ static void count_sort_array_satellite(generic_data_t cmp_arr, generic_data_t cm
     {
         memcpy(satellite_arr, output_satellite_arr, satellite_element_size * element_count);
     }
-    free(output_satellite_arr);
 }
 
 
@@ -217,7 +211,7 @@ void count_sort_array(generic_data_t cmp_arr, int single_element_size, int eleme
 {
     int* count_array = calloc(sizeof(int) * (max_value + 1), 1);
     generic_data_t* cmp_arr_out = malloc(single_element_size * element_count);
-    count_sort_array_satellite(cmp_arr, cmp_arr_out, NULL, single_element_size, 0, element_count, max_value, count_array);
+    count_sort_array_satellite(cmp_arr, cmp_arr_out, NULL, NULL, single_element_size, 0, element_count, max_value, count_array);
     free(count_array);
     free(cmp_arr_out);
 }
@@ -225,6 +219,42 @@ void count_sort_array(generic_data_t cmp_arr, int single_element_size, int eleme
 static void sort_array_count(generic_data_t arr, int single_element_size, int element_count,
     data_location_compare_function_t cf) {
     count_sort_array(arr, single_element_size, element_count, (size_t)((void*)cf));
+}
+
+void radix_sort_array(generic_data_t arr, int single_element_size, int element_count)
+{
+    int total_size = single_element_size * element_count;
+    unsigned char* cmp_arr = malloc(sizeof(unsigned char) * element_count);
+    const int max_value = 255;
+    unsigned char* cmp_arr_out = malloc(sizeof(unsigned char) * element_count);
+    int* count_array = calloc(sizeof(int) * (max_value + 1), 1);
+    generic_data_t output_satellite_arr = malloc(total_size);
+    generic_data_t copy_arr = malloc(total_size);
+    memcpy(copy_arr, arr, total_size);
+    int i = 0;
+    int j = 0;
+    if (single_element_size == sizeof(unsigned int))
+    {
+        for (i = 0; i < single_element_size; i++)
+        {
+            for (j = 0; j < element_count; j++)
+            {
+                cmp_arr[j] = ((unsigned int*)copy_arr)[j] % (max_value + 1);
+                ((unsigned int*)copy_arr)[j] /= (max_value + 1);
+            }
+            count_sort_array_satellite(cmp_arr, cmp_arr_out, arr, output_satellite_arr, sizeof(unsigned char), single_element_size, element_count, max_value, count_array);
+        }
+    }
+    free(count_array);
+    free(cmp_arr_out);
+    free(cmp_arr);
+    free(output_satellite_arr);
+    free(copy_arr);
+}
+
+static void sort_array_radix(generic_data_t arr, int single_element_size, int element_count,
+    data_location_compare_function_t cf) {
+    radix_sort_array(arr, single_element_size, element_count);
 }
 
 typedef void (*sort_array_inner_t)(generic_data_t arr, int single_element_size, int element_count,
@@ -235,6 +265,6 @@ void sort_array(generic_data_t arr, int single_element_size, int element_count, 
     if (single_element_size <= 1) return;
     assert(0 <= sa && sa < SortAlgorithmCount);
     static sort_array_inner_t funcs[] = { sort_array_insertion, sort_array_bubble,    sort_array_merge,
-                                         sort_array_shell,     sort_array_selection, sort_array_quick, sort_array_quick3way, sort_array_heap, sort_array_count };
+                                         sort_array_shell,     sort_array_selection, sort_array_quick, sort_array_quick3way, sort_array_heap, sort_array_count, sort_array_radix };
     return funcs[sa](arr, single_element_size, element_count, cf);
 }
