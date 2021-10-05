@@ -53,7 +53,7 @@ static void sort_array_merge(generic_data_t arr, int single_element_size, int el
     sort_array_merge_rec(arr, arr_copy, single_element_size, 0, element_count, cf);
     free(arr_copy);
 }
-
+#include <stdio.h>
 static void sort_array_insertion_gap(generic_data_t arr, int single_element_size, int element_count,
                                      data_location_compare_function_t cf, int gap) {
     void* key = alloca(single_element_size);
@@ -263,7 +263,7 @@ typedef void (*sort_array_inner_t)(generic_data_t arr, int single_element_size, 
 
 void sort_array(generic_data_t arr, int single_element_size, int element_count, data_location_compare_function_t cf,
                 sort_algorithm_t sa) {
-    if (single_element_size <= 1) return;
+    if (element_count <= 1) return;
     assert(0 <= sa && sa < SortAlgorithmCount);
     static sort_array_inner_t funcs[] = {
         sort_array_insertion, sort_array_bubble,    sort_array_merge, sort_array_shell, sort_array_selection,
