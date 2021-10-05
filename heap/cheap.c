@@ -18,7 +18,7 @@ void max_heapify(generic_data_t arr, int single_element_size, int element_count,
         if (left < element_count)
         {
             void* a_left = fetch_element_address(arr, single_element_size, left);
-            int cmp = cf(a_left, a_idx);
+            int cmp = cf(a_left, a_opt);
             if (cmp > 0) {
                 largest = left;
                 a_opt = a_left;
@@ -27,7 +27,7 @@ void max_heapify(generic_data_t arr, int single_element_size, int element_count,
         if (right < element_count)
         {
             void* a_right = fetch_element_address(arr, single_element_size, right);
-            int cmp = cf(a_right, a_idx);
+            int cmp = cf(a_right, a_opt);
             if (cmp > 0) {
                 largest = right;
                 a_opt = a_right;
@@ -44,5 +44,14 @@ void max_heapify(generic_data_t arr, int single_element_size, int element_count,
             break;
         }
     }
+}
 
+void build_heapify(generic_data_t arr, int single_element_size, int element_count,
+    data_location_compare_function_t cf)
+{
+    int i = 0;
+    for (i = element_count / 2 - 1; i >= 0; i--)
+    {
+        max_heapify(arr, single_element_size, element_count, cf, i);
+    }
 }
