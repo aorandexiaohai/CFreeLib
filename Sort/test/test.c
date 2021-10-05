@@ -25,6 +25,9 @@ typedef int (*func_t)(const void* data1_loc, const void* data2_loc);
 #define TEST_COUNT 10000
 #define PERFORMACE_TEST_COUNT 10
 #define MAX_VALUE 10000
+/**
+ * #define ENABLE_PERFORMANCE_TEST
+*/
 int main() {
     srand(0);
     int alg = 0;
@@ -58,6 +61,7 @@ int main() {
         }
         printf("unit test success\n\n-------------------------------------------------------------\n");
     }
+    #if defined(ENABLE_PERFORMANCE_TEST)
     {
         int len = 10000;
         int* arr = malloc(len * sizeof(int));
@@ -139,5 +143,6 @@ int main() {
         free(arr);
         printf("performance test of very large arraies success\n\n");
     }
+    #endif
     return 0;
 }
