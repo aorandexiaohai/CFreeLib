@@ -145,7 +145,8 @@ static void sort_array_heap(generic_data_t arr, int single_element_size, int ele
     build_heapify(arr, single_element_size, element_count, cf);
     void* tmp = alloca(single_element_size);
     void* a_0 = fetch_element_address(arr, single_element_size, 0);
-    for (int i = element_count - 1; i >= 1; i--)
+    int i = 0;
+    for (i = element_count - 1; i >= 1; i--)
     {
         void* a_i = fetch_element_address(arr, single_element_size, i);
         swap_content(a_0, a_i, tmp, single_element_size);
