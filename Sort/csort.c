@@ -164,7 +164,7 @@ static void sort_array_heap(generic_data_t arr, int single_element_size, int ele
         { \
             count_array[i] += count_array[i - 1]; \
         } \
-        if(!old_satellite_arr) { \
+        if(!satellite_arr) { \
             for (i = element_count - 1; i >= 0; i--) \
             { \
                 output_arr[count_array[arr[i]] - 1] = arr[i]; \
@@ -176,38 +176,38 @@ static void sort_array_heap(generic_data_t arr, int single_element_size, int ele
             { \
                 int j = count_array[arr[i]] - 1; \
                 output_arr[j] = arr[i]; \
-                memcpy(fetch_element_address(output_satellite_arr, single_satellite_element_size, j), fetch_element_address(old_satellite_arr, single_satellite_element_size, i), single_satellite_element_size); \
+                memcpy(fetch_element_address(output_satellite_arr, satellite_element_size, j), fetch_element_address(satellite_arr, satellite_element_size, i), satellite_element_size); \
                 count_array[arr[i]]--; \
             } \
         }
 
-static void count_sort_array_satellite(generic_data_t cmp_arr, generic_data_t cmp_arr_out, generic_data_t old_satellite_arr, int single_element_size, int single_satellite_element_size, int element_count, size_t max_value, int* count_array)
+static void count_sort_array_satellite(generic_data_t cmp_arr, generic_data_t cmp_arr_out, generic_data_t satellite_arr, int cmp_element_size, int satellite_element_size, int element_count, size_t max_value, int* count_array)
 {
     generic_data_t* output_satellite_arr = NULL;
-    if (old_satellite_arr)
+    if (satellite_arr)
     {
-        output_satellite_arr = malloc(single_satellite_element_size * element_count);
+        output_satellite_arr = malloc(satellite_element_size * element_count);
     }
 
-    if (single_element_size == sizeof(unsigned char)) {
+    if (cmp_element_size == sizeof(unsigned char)) {
         EXTEND_FOR_TYPE(unsigned char);
     }
-    else if (single_element_size == sizeof(unsigned short)) {
+    else if (cmp_element_size == sizeof(unsigned short)) {
         EXTEND_FOR_TYPE(unsigned short);
     }
-    else if (single_element_size == sizeof(unsigned int)) {
+    else if (cmp_element_size == sizeof(unsigned int)) {
         EXTEND_FOR_TYPE(unsigned int);
     }
-    else if (single_element_size == sizeof(unsigned long)) {
+    else if (cmp_element_size == sizeof(unsigned long)) {
         EXTEND_FOR_TYPE(unsigned long);
     }
-    else if (single_element_size == sizeof(unsigned long long)) {
+    else if (cmp_element_size == sizeof(unsigned long long)) {
         EXTEND_FOR_TYPE(unsigned long long);
     }
-    memcpy(cmp_arr, cmp_arr_out, single_element_size * element_count);
-    if (old_satellite_arr)
+    memcpy(cmp_arr, cmp_arr_out, cmp_element_size * element_count);
+    if (satellite_arr)
     {
-        memcpy(old_satellite_arr, output_satellite_arr, single_element_size * element_count);
+        memcpy(satellite_arr, output_satellite_arr, satellite_element_size * element_count);
     }
     free(output_satellite_arr);
 }
