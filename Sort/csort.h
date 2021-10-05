@@ -4,8 +4,8 @@
 /**
  * sort consecutive array by different algorithms.
  */
-enum sort_algorithm_inner { Insertion = 0, Bubble, Merge, Shell, Selection, Quick, Quick3Way, SortAlgorithmCount };
-static const char* sort_algorithm_strings[] = { "Insertion", "Bubble", "Merge", "Shell", "Selection", "Quick", "Quick3Way" };
+enum sort_algorithm_inner { Insertion = 0, Bubble, Merge, Shell, Selection, Quick, Quick3Way, Heap, SortAlgorithmCount };
+static const char* sort_algorithm_strings[] = { "Insertion", "Bubble", "Merge", "Shell", "Selection", "Quick", "Quick3Way", "Heap" };
 typedef enum sort_algorithm_inner sort_algorithm_t;
 /**
  * @brief if single_element_size is very large, it may cause the over flow of stack frame. Because when copying

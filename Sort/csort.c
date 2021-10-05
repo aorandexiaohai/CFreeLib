@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "carray.h"
+#include "cheap.h"
 #define ELEMENT_LOC(arr, idx) fetch_element_address(arr, single_element_size, idx)
 
 static void sort_array_merge_rec(generic_data_t arr, generic_data_t arr_copy, int single_element_size, int begin,
@@ -140,6 +141,19 @@ static void sort_array_quick3way(generic_data_t arr, int single_element_size, in
     sort_array_quick3way_rec(arr, single_element_size, 0, element_count, cf);
 }
 
+static void sort_array_heap(generic_data_t arr, int single_element_size, int element_count,
+    data_location_compare_function_t cf) {
+    build_heapify(arr, single_element_size, element_count, cf);
+    void* tmp = alloca(single_element_size);
+    void* a_0 = fetch_element_address(arr, single_element_size, 0);
+    for (int i = element_count - 1; i >= 1; i--)
+    {
+        void* a_i = fetch_element_address(arr, single_element_size, i);
+        swap_content(a_0, a_i, tmp, single_element_size);
+        max_heapify(arr, single_element_size, i, cf, 0);
+    }
+}
+
 typedef void (*sort_array_inner_t)(generic_data_t arr, int single_element_size, int element_count,
     data_location_compare_function_t cf);
 
@@ -148,6 +162,6 @@ void sort_array(generic_data_t arr, int single_element_size, int element_count, 
     if (single_element_size <= 1) return;
     assert(0 <= sa && sa < SortAlgorithmCount);
     static sort_array_inner_t funcs[] = { sort_array_insertion, sort_array_bubble,    sort_array_merge,
-                                         sort_array_shell,     sort_array_selection, sort_array_quick, sort_array_quick3way };
+                                         sort_array_shell,     sort_array_selection, sort_array_quick, sort_array_quick3way, sort_array_heap };
     return funcs[sa](arr, single_element_size, element_count, cf);
 }
