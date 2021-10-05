@@ -155,7 +155,7 @@ static void sort_array_heap(generic_data_t arr, int single_element_size, int ele
 
 #define EXTEND_FOR_TYPE(type) \
         type* arr = (type*)cmp_arr; \
-        type* output_arr = (type*)output_arr_inner; \
+        type* output_arr = (type*)cmp_arr_out; \
         int i = 0; \
         for (i = 0; i < element_count; i++) { \
             count_array[arr[i]]++; \
@@ -181,11 +181,8 @@ static void sort_array_heap(generic_data_t arr, int single_element_size, int ele
             } \
         }
 
-static void count_sort_array_satellite(generic_data_t cmp_arr, generic_data_t old_satellite_arr, int single_element_size, int single_satellite_element_size, int element_count, size_t max_value, int* count_array)
+static void count_sort_array_satellite(generic_data_t cmp_arr, generic_data_t cmp_arr_out, generic_data_t old_satellite_arr, int single_element_size, int single_satellite_element_size, int element_count, size_t max_value, int* count_array)
 {
-    // size_t* c = (size_t*)calloc(sizeof(size_t) * (max_value + 1), 1);
-    generic_data_t* output_arr_inner = malloc(single_element_size * element_count);
-
     generic_data_t* output_satellite_arr = NULL;
     if (old_satellite_arr)
     {
@@ -207,13 +204,11 @@ static void count_sort_array_satellite(generic_data_t cmp_arr, generic_data_t ol
     else if (single_element_size == sizeof(unsigned long long)) {
         EXTEND_FOR_TYPE(unsigned long long);
     }
-    memcpy(cmp_arr, output_arr_inner, single_element_size * element_count);
+    memcpy(cmp_arr, cmp_arr_out, single_element_size * element_count);
     if (old_satellite_arr)
     {
         memcpy(old_satellite_arr, output_satellite_arr, single_element_size * element_count);
     }
-    // free(c);
-    free(output_arr_inner);
     free(output_satellite_arr);
 }
 
@@ -221,8 +216,10 @@ static void count_sort_array_satellite(generic_data_t cmp_arr, generic_data_t ol
 void count_sort_array(generic_data_t cmp_arr, int single_element_size, int element_count, size_t max_value)
 {
     int* count_array = calloc(sizeof(int) * (max_value + 1), 1);
-    count_sort_array_satellite(cmp_arr, NULL, single_element_size, 0, element_count, max_value, count_array);
+    generic_data_t* cmp_arr_out = malloc(single_element_size * element_count);
+    count_sort_array_satellite(cmp_arr, cmp_arr_out, NULL, single_element_size, 0, element_count, max_value, count_array);
     free(count_array);
+    free(cmp_arr_out);
 }
 
 static void sort_array_count(generic_data_t arr, int single_element_size, int element_count,
