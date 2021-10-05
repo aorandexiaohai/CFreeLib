@@ -185,6 +185,9 @@ void count_sort_array(generic_data_t old_arr, int single_element_size, int eleme
     else if (single_element_size == sizeof(unsigned long)) {
         EXTEND_FOR_TYPE(unsigned long);
     }
+    else if (single_element_size == sizeof(unsigned long long)) {
+        EXTEND_FOR_TYPE(unsigned long long);
+    }
     free(c);
 }
 
