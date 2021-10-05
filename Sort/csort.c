@@ -172,7 +172,7 @@ static void sort_array_heap(generic_data_t arr, int single_element_size, int ele
 
 void count_sort_array(generic_data_t old_arr, int single_element_size, int element_count, size_t max_value)
 {
-    int* c = (int*)calloc(sizeof(int) * (max_value + 1), 1);
+    size_t* c = (size_t*)calloc(sizeof(size_t) * (max_value + 1), 1);
     if (single_element_size == sizeof(unsigned char)) {
         EXTEND_FOR_TYPE(unsigned char);
     }
