@@ -4,13 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-void swap_content(generic_data_t data_loc1, generic_data_t data_loc2, generic_data_t tmp, int element_size) {
-    if (data_loc1 == data_loc2) return;
-    memcpy(tmp, data_loc1, element_size);
-    memcpy(data_loc1, data_loc2, element_size);
-    memcpy(data_loc2, tmp, element_size);
-}
-
 void shuffle_array(generic_data_t arr, int single_element_size, int element_count) {
     void* tmp = alloca(single_element_size);
     int i = 0;
