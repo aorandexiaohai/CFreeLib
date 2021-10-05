@@ -228,7 +228,7 @@ void radix_sort_array(generic_data_t arr, int single_element_size, int element_c
     unsigned char* cmp_arr = malloc(sizeof(unsigned char) * element_count);
     const int max_value = 255;
     unsigned char* cmp_arr_out = malloc(sizeof(unsigned char) * element_count);
-    int* count_array = calloc(sizeof(int) * (max_value + 1), 1);
+    int* count_array = malloc(sizeof(int) * (max_value + 1));
     generic_data_t output_satellite_arr = malloc(total_size);
     generic_data_t copy_arr = malloc(total_size);
     memcpy(copy_arr, arr, total_size);
@@ -243,6 +243,7 @@ void radix_sort_array(generic_data_t arr, int single_element_size, int element_c
                 cmp_arr[j] = ((unsigned int*)copy_arr)[j] % (max_value + 1);
                 ((unsigned int*)copy_arr)[j] /= (max_value + 1);
             }
+            memset(count_array, 0, sizeof(int) * (max_value + 1));
             count_sort_array_satellite(cmp_arr, cmp_arr_out, arr, output_satellite_arr, sizeof(unsigned char), single_element_size, element_count, max_value, count_array);
         }
     }
