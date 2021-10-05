@@ -158,32 +158,32 @@ static void sort_array_heap(generic_data_t arr, int single_element_size, int ele
         type* output_arr = (type*)output_arr_inner; \
         int i = 0; \
         for (i = 0; i < element_count; i++) { \
-            c[arr[i]]++; \
+            count_array[arr[i]]++; \
         } \
         for (i = 1; i <= max_value; i++) \
         { \
-            c[i] += c[i - 1]; \
+            count_array[i] += count_array[i - 1]; \
         } \
         if(!old_satellite_arr) { \
             for (i = element_count - 1; i >= 0; i--) \
             { \
-                output_arr[c[arr[i]] - 1] = arr[i]; \
-                c[arr[i]]--; \
+                output_arr[count_array[arr[i]] - 1] = arr[i]; \
+                count_array[arr[i]]--; \
             } \
         } else \
         {  \
             for (i = element_count - 1; i >= 0; i--) \
             { \
-                int j = c[arr[i]] - 1; \
+                int j = count_array[arr[i]] - 1; \
                 output_arr[j] = arr[i]; \
                 memcpy(fetch_element_address(output_satellite_arr, single_satellite_element_size, j), fetch_element_address(old_satellite_arr, single_satellite_element_size, i), single_satellite_element_size); \
-                c[arr[i]]--; \
+                count_array[arr[i]]--; \
             } \
         }
 
-static void count_sort_array_satellite(generic_data_t cmp_arr, generic_data_t old_satellite_arr, int single_element_size, int single_satellite_element_size, int element_count, size_t max_value)
+static void count_sort_array_satellite(generic_data_t cmp_arr, generic_data_t old_satellite_arr, int single_element_size, int single_satellite_element_size, int element_count, size_t max_value, int* count_array)
 {
-    size_t* c = (size_t*)calloc(sizeof(size_t) * (max_value + 1), 1);
+    // size_t* c = (size_t*)calloc(sizeof(size_t) * (max_value + 1), 1);
     generic_data_t* output_arr_inner = malloc(single_element_size * element_count);
 
     generic_data_t* output_satellite_arr = NULL;
@@ -212,7 +212,7 @@ static void count_sort_array_satellite(generic_data_t cmp_arr, generic_data_t ol
     {
         memcpy(old_satellite_arr, output_satellite_arr, single_element_size * element_count);
     }
-    free(c);
+    // free(c);
     free(output_arr_inner);
     free(output_satellite_arr);
 }
@@ -220,7 +220,9 @@ static void count_sort_array_satellite(generic_data_t cmp_arr, generic_data_t ol
 
 void count_sort_array(generic_data_t cmp_arr, int single_element_size, int element_count, size_t max_value)
 {
-    count_sort_array_satellite(cmp_arr, NULL, single_element_size, 0, element_count, max_value);
+    int* count_array = calloc(sizeof(int) * (max_value + 1), 1);
+    count_sort_array_satellite(cmp_arr, NULL, single_element_size, 0, element_count, max_value, count_array);
+    free(count_array);
 }
 
 static void sort_array_count(generic_data_t arr, int single_element_size, int element_count,
