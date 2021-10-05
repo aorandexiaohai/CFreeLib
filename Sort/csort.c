@@ -154,25 +154,27 @@ static void sort_array_heap(generic_data_t arr, int single_element_size, int ele
 }
 
 #define EXTEND_FOR_TYPE(type) \
-        type* arr = (type*)old_arr;\
-        int i = 0;\
-        for (i = 0; i < element_count; i++) {\
-            c[arr[i]]++;\
-        }\
-        int base = 0;\
-        int j = 0;\
-        for (i = 0; i <= max_value; i++)\
-        {\
-            for (j = 0; j < c[i]; j++)\
-            {\
-                arr[base++] = (type)i;\
-            }\
+        type* arr = (type*)old_arr; \
+        type* output_arr = (type*)output_arr_inner; \
+        int i = 0; \
+        for (i = 0; i < element_count; i++) { \
+            c[arr[i]]++; \
+        } \
+        for (i = 1; i <= max_value; i++) \
+        { \
+            c[i] += c[i - 1]; \
+        } \
+        for (i = element_count - 1; i >= 0; i--) \
+        { \
+            output_arr[c[arr[i]] - 1] = arr[i]; \
+            c[arr[i]]--; \
         }
 
 
 void count_sort_array(generic_data_t old_arr, int single_element_size, int element_count, size_t max_value)
 {
     size_t* c = (size_t*)calloc(sizeof(size_t) * (max_value + 1), 1);
+    generic_data_t* output_arr_inner = calloc(single_element_size * element_count, 1);
     if (single_element_size == sizeof(unsigned char)) {
         EXTEND_FOR_TYPE(unsigned char);
     }
@@ -188,7 +190,9 @@ void count_sort_array(generic_data_t old_arr, int single_element_size, int eleme
     else if (single_element_size == sizeof(unsigned long long)) {
         EXTEND_FOR_TYPE(unsigned long long);
     }
+    memcpy(old_arr, output_arr_inner, single_element_size * element_count);
     free(c);
+    free(output_arr_inner);
 }
 
 static void sort_array_count(generic_data_t arr, int single_element_size, int element_count,
