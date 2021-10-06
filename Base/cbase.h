@@ -14,7 +14,10 @@ typedef generic_data_t (*generic_function_t)(generic_data_t);
  */
 void swap_content(generic_data_t data_loc1, generic_data_t data_loc2, generic_data_t data_swap_loc, int element_size);
 
-static bool is_small_endien() {
+/**
+ * test whether the system is small or big endian.
+*/
+static bool is_small_endian() {
     int i = 1;
     return *((char *)(&i));
 }
