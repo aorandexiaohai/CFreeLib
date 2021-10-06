@@ -236,18 +236,27 @@ void radix_sort_array(generic_data_t arr, int single_element_size, int element_c
     int i = 0;
     int j = 0;
     int k = 0;
-    if (single_element_size == sizeof(unsigned char)) {
-        EXTEND_FOR_TYPE1(unsigned char);
-    } else if (single_element_size == sizeof(unsigned short)) {
-        EXTEND_FOR_TYPE1(unsigned short);
-    } else if (single_element_size == sizeof(unsigned int)) {
-        EXTEND_FOR_TYPE1(unsigned int);
-    } else if (single_element_size == sizeof(unsigned long)) {
-        EXTEND_FOR_TYPE1(unsigned long);
-    } else if (single_element_size == sizeof(unsigned long long)) {
-        EXTEND_FOR_TYPE1(unsigned long long);
+    {
+        if (is_small_endian()) {
+            for (i = 0; i < single_element_size; i++) {
+                for (j = 0; j < element_count; j++) {
+                    cmp_arr[j] = ((unsigned char*)arr)[j * single_element_size + i];
+                }
+                memset(count_array, 0, sizeof(int) * (max_value + 1));
+                count_sort_array_satellite(cmp_arr, cmp_arr_out, arr, output_satellite_arr, sizeof(unsigned char),
+                                           single_element_size, element_count, max_value, count_array);
+            }
+        } else {
+            for (i = 0; i < single_element_size; i++) {
+                for (j = 0; j < element_count; j++) {
+                    cmp_arr[j] = ((unsigned char*)arr)[j * single_element_size + single_element_size - 1 - i];
+                }
+                memset(count_array, 0, sizeof(int) * (max_value + 1));
+                count_sort_array_satellite(cmp_arr, cmp_arr_out, arr, output_satellite_arr, sizeof(unsigned char),
+                                           single_element_size, element_count, max_value, count_array);
+            }
+        }
     }
-
     free(count_array);
     free(cmp_arr_out);
     free(cmp_arr);
