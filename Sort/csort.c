@@ -212,20 +212,6 @@ static void sort_array_count(generic_data_t arr, int single_element_size, int el
     count_sort_array(arr, single_element_size, element_count, (size_t)((void*)cf));
 }
 
-#define EXTEND_FOR_TYPE1(type)                                                                             \
-    for (i = 0; i < single_element_size; i++) {                                                            \
-        for (j = 0; j < element_count; j++) {                                                              \
-            type value = ((type*)arr)[j];                                                                  \
-            for (k = 0; k < i; k++) {                                                                      \
-                value /= (max_value + 1);                                                                  \
-            }                                                                                              \
-            cmp_arr[j] = value % (max_value + 1);                                                          \
-        }                                                                                                  \
-        memset(count_array, 0, sizeof(int) * (max_value + 1));                                             \
-        count_sort_array_satellite(cmp_arr, cmp_arr_out, arr, output_satellite_arr, sizeof(unsigned char), \
-                                   single_element_size, element_count, max_value, count_array);            \
-    }
-
 void radix_sort_array(generic_data_t arr, int single_element_size, int element_count) {
     int total_size = single_element_size * element_count;
     unsigned char* cmp_arr = malloc(sizeof(unsigned char) * element_count);
