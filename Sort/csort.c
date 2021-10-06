@@ -215,8 +215,11 @@ static void sort_array_count(generic_data_t arr, int single_element_size, int el
 #define EXTEND_FOR_TYPE1(type)                                                                             \
     for (i = 0; i < single_element_size; i++) {                                                            \
         for (j = 0; j < element_count; j++) {                                                              \
-            cmp_arr[j] = ((type*)copy_arr)[j] % (max_value + 1);                                           \
-            ((type*)copy_arr)[j] /= (max_value + 1);                                                       \
+            type value = ((type*)arr)[j];                                                                  \
+            for (k = 0; k < i; k++) {                                                                      \
+                value /= (max_value + 1);                                                                  \
+            }                                                                                              \
+            cmp_arr[j] = value % (max_value + 1);                                                          \
         }                                                                                                  \
         memset(count_array, 0, sizeof(int) * (max_value + 1));                                             \
         count_sort_array_satellite(cmp_arr, cmp_arr_out, arr, output_satellite_arr, sizeof(unsigned char), \
@@ -230,10 +233,9 @@ void radix_sort_array(generic_data_t arr, int single_element_size, int element_c
     unsigned char* cmp_arr_out = malloc(sizeof(unsigned char) * element_count);
     int* count_array = malloc(sizeof(int) * (max_value + 1));
     generic_data_t output_satellite_arr = malloc(total_size);
-    generic_data_t copy_arr = malloc(total_size);
-    memcpy(copy_arr, arr, total_size);
     int i = 0;
     int j = 0;
+    int k = 0;
     if (single_element_size == sizeof(unsigned char)) {
         EXTEND_FOR_TYPE1(unsigned char);
     } else if (single_element_size == sizeof(unsigned short)) {
@@ -250,7 +252,6 @@ void radix_sort_array(generic_data_t arr, int single_element_size, int element_c
     free(cmp_arr_out);
     free(cmp_arr);
     free(output_satellite_arr);
-    free(copy_arr);
 }
 
 static void sort_array_radix(generic_data_t arr, int single_element_size, int element_count,

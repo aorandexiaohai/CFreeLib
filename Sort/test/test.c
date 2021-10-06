@@ -67,7 +67,7 @@ typedef int (*func_t)(const void* data1_loc, const void* data2_loc);
 #define LENGTH1 100
 #define TEST_COUNT 10000
 #define PERFORMACE_TEST_COUNT 10
-#define MAX_VALUE 127
+#define MAX_VALUE 10000
 /**
  * #define ENABLE_PERFORMANCE_TEST
  */
