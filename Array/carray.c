@@ -20,7 +20,7 @@ int partition(generic_data_t arr, int p, int r, int single_element_size, data_lo
     void* x = alloca(single_element_size);
     void* ar = fetch_element_address(arr, single_element_size, r);
     void* tmp = alloca(single_element_size);
-    
+
     {
         /**
          * use a random pivot.
