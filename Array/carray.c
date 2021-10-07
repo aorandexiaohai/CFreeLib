@@ -19,10 +19,17 @@ int partition(generic_data_t arr, int p, int r, int single_element_size, data_lo
     r--;
     void* x = alloca(single_element_size);
     void* ar = fetch_element_address(arr, single_element_size, r);
-    memcpy(x, ar, single_element_size);
-
     void* tmp = alloca(single_element_size);
+    
+    {
+        /**
+         * use a random pivot.
+         */
+        int i = rand() % (r - p + 1) + p;
+        swap_content(fetch_element_address(arr, single_element_size, i), ar, tmp, single_element_size);
+    }
 
+    memcpy(x, ar, single_element_size);
     int i = p - 1;
     int j = 0;
     for (j = p; j < r; j++) {
