@@ -33,12 +33,13 @@ thread_pool_t *create_thread_pool(int threads, int max_task_count);
  * @pre The user of the pool should maintain the life time of 'args' and
  * 'result' if necessary.
  * @pre If result is not NULL, it can hold at least sizeof(void*) of bytes. This
- * is very important!!!
+ * is very important!!! The reason is that it is used to store the returned result 
+ * of 'f'.
  *
  * @param p A thread pool.
  * @param f
  * @param args
- * @param result Memory address that is used to store the returned value of f.
+ * @param result Memory address that is used to store the returned value of 'f'.
  *
  * @return A future pointer.
  *      If 'result' or 'f' is NULL, the function will reture NULL.
