@@ -12,7 +12,7 @@
             如果当前任务缓存已满, 则'enqueue_task'调用将被阻塞
 
         4) 支持线程池计算结果异步反馈
-            如果'enqueue_task'中的'result'指针不为空, 该函数返回一个future_t支持.
+            如果'enqueue_task'中的'result'指针不为空, 该函数返回一个future_t指针.
             调用者通过调用'wait_and_close_future'等待线程池的结果. 
             最后通过'result'指针获取结果.
             
